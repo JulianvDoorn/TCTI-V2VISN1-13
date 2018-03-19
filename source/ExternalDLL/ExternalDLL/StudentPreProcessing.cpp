@@ -1,8 +1,7 @@
 #include "StudentPreProcessing.h"
-
 #include "ImageFactory.h"
 
-#include <opencv2/imgproc/imgproc.hpp>
+#include <math.h>
 
 IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &image) const {
 	return nullptr;
@@ -15,41 +14,56 @@ IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &imag
 IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &image) const {
 	IntensityImage* retImage = ImageFactory::newIntensityImage(image);
 	
-	cv::Mat input;
-	
-	// PIXEL PER PIXEL COPY
 	int w = image.getWidth();
 	int h = image.getHeight();
 
-	input.create(h, w, CV_8UC1);
+	constexpr int weight = 2;
 
-	for (int x = 0; x < input.cols; x++) {
-		for (int y = 0; y < input.rows; y++) {
-			input.at<uchar>(y, x) = image.getPixel(x, y);
+	const char kernel_x[3][3] = {
+		{ 1 * weight, 0 * weight, -1 * weight },
+		{ 2 * weight, 0 * weight, -2 * weight },
+		{ 1 * weight, 0 * weight, -1 * weight }
+	};
+
+	const char kernel_y[3][3] = {
+		{ 1 * weight, 2 * weight, 1 * weight },
+		{ 0 * weight, 0 * weight, 0 * weight },
+		{ -1 * weight, -2 * weight, -1 * weight }
+	};
+
+	for (int y = 0; y < h; y++) {
+		for (int x = 0; x < w; x++) {
+			int intens = 0;
+			
+			intens += image.getPixel(x - 1, y - 1) * kernel_x[0][0];
+			intens += image.getPixel(x - 1, y) * kernel_x[1][0];
+			intens += image.getPixel(x - 1, y + 1) * kernel_x[2][0];
+			intens += image.getPixel(x, y - 1) * kernel_x[0][1];
+			intens += image.getPixel(x, y) * kernel_x[1][1];
+			intens += image.getPixel(x, y + 1) * kernel_x[2][1];
+			intens += image.getPixel(x + 1, y - 1) * kernel_x[0][2];
+			intens += image.getPixel(x + 1, y) * kernel_x[1][2];
+			intens += image.getPixel(x + 1, y + 1) * kernel_x[2][2];
+
+			intens += image.getPixel(x - 1, y - 1) * kernel_y[0][0];
+			intens += image.getPixel(x - 1, y) * kernel_y[1][0];
+			intens += image.getPixel(x - 1, y + 1) * kernel_y[2][0];
+			intens += image.getPixel(x, y - 1) * kernel_y[0][1];
+			intens += image.getPixel(x, y) * kernel_y[1][1];
+			intens += image.getPixel(x, y + 1) * kernel_y[2][1];
+			intens += image.getPixel(x + 1, y - 1) * kernel_y[0][2];
+			intens += image.getPixel(x + 1, y) * kernel_y[1][2];
+			intens += image.getPixel(x + 1, y + 1) * kernel_y[2][2];
+
+			intens = abs(intens);
+
+			if (intens > 255) {
+				intens = 255;
+			}
+
+			retImage->setPixel(x, y, intens);
 		}
 	}
-	// END PIXEL PER PIXEL COPY
-
-	cv::Mat output;
-
-	cv::Sobel(input, output, CV_8U, 1, 1, 5);
-	
-	// PIXEL PER PIXEL COPY TO INTENSITYIMAGE
-
-	int type = output.type();
-	if (type != CV_8UC1) {
-		throw std::exception("OpenCV Mat source image not of type CV_8UC1!");
-	}
-
-	retImage->set(output.cols, output.rows);
-
-	for (int x = 0; x < output.cols; x++) {
-		for (int y = 0; y < output.rows; y++) {
-			retImage->setPixel(x, y, output.at<uchar>(y, x));
-		}
-	}
-
-	// END PIXEL PER PIXEL COPY TO INTENSITYIMAGE
 
 	return retImage;
 }
