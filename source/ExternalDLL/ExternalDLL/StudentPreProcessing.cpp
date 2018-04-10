@@ -1,7 +1,9 @@
 #include "StudentPreProcessing.h"
 #include "ImageFactory.h"
 
-#include <math.h>
+#include <cmath>
+
+#include "Kernel.h"
 
 IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &image) const {
 	return nullptr;
@@ -13,11 +15,11 @@ IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &imag
 
 IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &image) const {
 	IntensityImage* retImage = ImageFactory::newIntensityImage(image);
-	
+
 	int w = image.getWidth();
 	int h = image.getHeight();
 
-	constexpr int weight = 2;
+	constexpr int weight = 1;
 
 	const char kernel_x[3][3] = {
 		{ 1 * weight, 0 * weight, -1 * weight },
@@ -33,29 +35,31 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 
 	for (int y = 0; y < h; y++) {
 		for (int x = 0; x < w; x++) {
-			int intens = 0;
-			
-			intens += image.getPixel(x - 1, y - 1) * kernel_x[0][0];
-			intens += image.getPixel(x - 1, y) * kernel_x[1][0];
-			intens += image.getPixel(x - 1, y + 1) * kernel_x[2][0];
-			intens += image.getPixel(x, y - 1) * kernel_x[0][1];
-			intens += image.getPixel(x, y) * kernel_x[1][1];
-			intens += image.getPixel(x, y + 1) * kernel_x[2][1];
-			intens += image.getPixel(x + 1, y - 1) * kernel_x[0][2];
-			intens += image.getPixel(x + 1, y) * kernel_x[1][2];
-			intens += image.getPixel(x + 1, y + 1) * kernel_x[2][2];
+			int intens_x = 0;
+			int intens_y = 0;
+			int intens;
 
-			intens += image.getPixel(x - 1, y - 1) * kernel_y[0][0];
-			intens += image.getPixel(x - 1, y) * kernel_y[1][0];
-			intens += image.getPixel(x - 1, y + 1) * kernel_y[2][0];
-			intens += image.getPixel(x, y - 1) * kernel_y[0][1];
-			intens += image.getPixel(x, y) * kernel_y[1][1];
-			intens += image.getPixel(x, y + 1) * kernel_y[2][1];
-			intens += image.getPixel(x + 1, y - 1) * kernel_y[0][2];
-			intens += image.getPixel(x + 1, y) * kernel_y[1][2];
-			intens += image.getPixel(x + 1, y + 1) * kernel_y[2][2];
+			intens_x += image.getPixel(x - 1, y - 1) * kernel_x[0][0];
+			intens_x += image.getPixel(x - 1, y) * kernel_x[1][0];
+			intens_x += image.getPixel(x - 1, y + 1) * kernel_x[2][0];
+			intens_x += image.getPixel(x, y - 1) * kernel_x[0][1];
+			intens_x += image.getPixel(x, y) * kernel_x[1][1];
+			intens_x += image.getPixel(x, y + 1) * kernel_x[2][1];
+			intens_x += image.getPixel(x + 1, y - 1) * kernel_x[0][2];
+			intens_x += image.getPixel(x + 1, y) * kernel_x[1][2];
+			intens_x += image.getPixel(x + 1, y + 1) * kernel_x[2][2];
 
-			intens = abs(intens);
+			intens_y += image.getPixel(x - 1, y - 1) * kernel_y[0][0];
+			intens_y += image.getPixel(x - 1, y) * kernel_y[1][0];
+			intens_y += image.getPixel(x - 1, y + 1) * kernel_y[2][0];
+			intens_y += image.getPixel(x, y - 1) * kernel_y[0][1];
+			intens_y += image.getPixel(x, y) * kernel_y[1][1];
+			intens_y += image.getPixel(x, y + 1) * kernel_y[2][1];
+			intens_y += image.getPixel(x + 1, y - 1) * kernel_y[0][2];
+			intens_y += image.getPixel(x + 1, y) * kernel_y[1][2];
+			intens_y += image.getPixel(x + 1, y + 1) * kernel_y[2][2];
+
+			intens =  std::sqrt( intens_x * intens_x + intens_y * intens_y);
 
 			if (intens > 255) {
 				intens = 255;
