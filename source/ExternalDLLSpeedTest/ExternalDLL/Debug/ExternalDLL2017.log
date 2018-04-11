@@ -1,0 +1,5 @@
+﻿  DefaultPreProcessing.cpp
+c:\users\jari van dam\documents\hu\tcti-v2visn1-13\source\externaldll\externaldll\imagefactory.h(20): warning C4091: 'static ': ignored on left of 'ImageFactory::Implementation' when no variable is declared
+c:\users\jari van dam\documents\hu\tcti-v2visn1-13\source\externaldll\externaldll\imagefactory.h(29): warning C4091: 'static ': ignored on left of 'ImageFactory::ImplementationStudent' when no variable is declared
+c:\users\jari van dam\documents\hu\tcti-v2visn1-13\source\externaldll\externaldll\imagefactory.h(37): warning C4091: 'static ': ignored on left of 'ImageFactory::ImplementationPrivate' when no variable is declared
+  ExternalDLL2017.vcxproj -> C:\Users\Jari van Dam\Documents\HU\TCTI-V2VISN1-13\source\FaceRecognitionGUI\Debug\ExternalDLL.dll
