@@ -3,8 +3,6 @@
 
 #include <cmath>
 
-#include "Kernel.h"
-
 IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &image) const {
 	return nullptr;
 }
@@ -19,7 +17,7 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 	int w = image.getWidth();
 	int h = image.getHeight();
 
-	constexpr int weight = 1;
+	constexpr int weight = 2;
 
 	const char kernel_x[3][3] = {
 		{ 1 * weight, 0 * weight, -1 * weight },
@@ -33,8 +31,8 @@ IntensityImage * StudentPreProcessing::stepEdgeDetection(const IntensityImage &i
 		{ -1 * weight, -2 * weight, -1 * weight }
 	};
 
-	for (int y = 0; y < h; y++) {
-		for (int x = 0; x < w; x++) {
+	for (int y = 0; y < h - 1; y++) {
+		for (int x = 0; x < w - 1; x++) {
 			int intens_x = 0;
 			int intens_y = 0;
 			int intens;
