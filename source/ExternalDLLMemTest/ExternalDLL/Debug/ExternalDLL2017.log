@@ -1,0 +1,6 @@
+﻿  StudentPreProcessing.cpp
+c:\users\julian\documents\tcti-v2visn1-13\source\externaldllmemtest\externaldll\imagefactory.h(20): warning C4091: 'static ': ignored on left of 'ImageFactory::Implementation' when no variable is declared
+c:\users\julian\documents\tcti-v2visn1-13\source\externaldllmemtest\externaldll\imagefactory.h(29): warning C4091: 'static ': ignored on left of 'ImageFactory::ImplementationStudent' when no variable is declared
+c:\users\julian\documents\tcti-v2visn1-13\source\externaldllmemtest\externaldll\imagefactory.h(37): warning C4091: 'static ': ignored on left of 'ImageFactory::ImplementationPrivate' when no variable is declared
+c:\users\julian\documents\tcti-v2visn1-13\source\externaldllmemtest\externaldll\studentpreprocessing.cpp(67): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  ExternalDLL2017.vcxproj -> C:\Users\Julian\Documents\TCTI-V2VISN1-13\source\ExternalDLLMemTest\Debug\ExternalDLL.exe
